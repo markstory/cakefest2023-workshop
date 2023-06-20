@@ -1,0 +1,4 @@
+<?php
+return [
+    'Cake/Repl' => []
+];
