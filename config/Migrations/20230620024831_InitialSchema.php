@@ -30,7 +30,23 @@ class InitialSchema extends AbstractMigration
             ->addColumn('modified', 'datetime', [
                 'default' => null,
                 'null' => false,
-        ]);
+            ]);
+        $table->create();
+
+        $table = $this->table('articles');
+        $table->addColumn('title', 'string', ['null' => false, 'limit' => null])
+            ->addColumn('markdown', 'text')
+            ->addColumn('html', 'text')
+            ->addColumn('status', 'string')
+            ->addColumn('created', 'datetime', [
+                'default' => null,
+                'null' => false,
+            ])
+            ->addColumn('modified', 'datetime', [
+                'default' => null,
+                'null' => false,
+            ])
+            ->addIndex('status');
         $table->create();
     }
 }

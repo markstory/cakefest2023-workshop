@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use App\Model\ArticleStatus;
 use Cake\Command\Command;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
@@ -45,7 +46,8 @@ class PlaygroundCommand extends Command
             return $this->reset($args, $io);
         }
 
-        $this->datetimeTypes($args, $io);
+        // $this->datetimeTypes($args, $io);
+        $this->enumTypes($args, $io);
     }
 
     /**
@@ -79,17 +81,55 @@ class PlaygroundCommand extends Command
             'recurs_on' => '+7 days',
         ]);
         $calendarItems->saveOrFail($entity);
+
+        $articles = $this->fetchTable('Articles');
+        $article = $articles->newEntity([
+            'title' => 'First post',
+            'markdown' => 'This is my first post',
+            'status' => ArticleStatus::DRAFT->value,
+        ]);
+        $articles->saveOrFail($article);
         $io->success('Reset complete!');
 
         return self::CODE_SUCCESS;
+    }
+
+    protected function enumTypes($args, $io) {
+        $articles = $this->fetchTable('Articles');
+
+        $article = $articles->find()->firstOrFail();
+        eval(breakpoint());
     }
 
     protected function datetimeTypes(Arguments $args, ConsoleIo $io)
     {
         $calendarItems = $this->fetchTable('CalendarItems');
 
-        // Load a record up and look at the types.
+        // {{{ Load a date record up and look at the types.
+        // $date->start_date is a date.
+        // It is not a datetime
+        // it has no time components.
+        // while it has many similar methods to datetime
+        // format() modify(), addDay(), addMonth()
+        // it cannot be modified by time.
+        // great for calendar days when you don't
+        // want to worry about time or timezones mucking up your math
+        // }}}
         $day = $calendarItems->findByTitle('All day event')->firstOrFail();
+        eval(breakpoint());
+
+        // {{{ Load a time record up and look at the types.
+        // $date->start_time is a time.
+        // It is not a datetime
+        // it has no date components.
+        // while it has many similar methods to datetime
+        // format() modify(), addHour(), addMinute()
+        // it cannot be modified by day.
+        // great for clocks, or watches.
+        // want to worry about time or timezones mucking up your math
+        // also worth looking at the datetime properties.
+        // }}}
+        $time = $calendarItems->findByTitle('Time only')->firstOrFail();
         eval(breakpoint());
     }
 }
