@@ -77,4 +77,14 @@ class ArticlesTable extends Table
 
         return $validator;
     }
+
+    public function findPublished(SelectQuery $query, ?ArticleStatus $status = null)
+    {
+        if (!$status) {
+            $status = ArticleStatus::PUBLISHED;
+        }
+        $query->where(['Articles.status' => $status]);
+
+        return $query;
+    }
 }
