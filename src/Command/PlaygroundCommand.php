@@ -29,6 +29,10 @@ class PlaygroundCommand extends Command
             'boolean' => true,
             'default' => false,
         ]);
+        $parser->addOption('name', [
+            'help' => 'The name thing',
+            'default' => '',
+        ]);
 
         return $parser;
     }
@@ -49,7 +53,8 @@ class PlaygroundCommand extends Command
         // $this->datetimeTypes($args, $io);
         // $this->enumTypes($args, $io);
         // $this->queryClasses($args, $io);
-        $this->typedFinder($args, $io);
+        // $this->typedFinder($args, $io);
+        // $this->consoleArgs($args, $io);
     }
 
     /**
@@ -181,6 +186,17 @@ class PlaygroundCommand extends Command
     public function typedFinder(Arguments $args, ConsoleIo $io)
     {
         $articles = $this->fetchTable('Articles');
+        eval(breakpoint());
+    }
+
+    // {{{
+    // Show arguments and options
+    // > Can use -- to add positional arguments.
+    // bin/cake playground --name mark -- one two three "four and"
+    //
+    // }}}
+    public function consoleArgs(Arguments $args, ConsoleIo $io)
+    {
         eval(breakpoint());
     }
 }
