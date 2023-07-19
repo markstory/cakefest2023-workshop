@@ -26,6 +26,9 @@ use Cake\View\JsonView;
  */
 class ErrorController extends AppController
 {
+    /**
+     * Enable json error views.
+     */
     public function viewClasses(): array
     {
         return [JsonView::class];
