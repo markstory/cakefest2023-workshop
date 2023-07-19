@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Model\ArticleStatus;
+use Authentication\PasswordHasher\DefaultPasswordHasher;
 use Cake\Command\Command;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
@@ -61,8 +62,22 @@ class PlaygroundCommand extends Command
      * Delete all records in the local database and create new state.
      */
     protected function reset(Arguments $args, ConsoleIo $io) {
-        $calendarItems = $this->fetchTable('CalendarItems');
+        $users = $this->fetchTable('Users');
+        $users->deleteQuery()->where('1=1')->execute();
+        $user = $users->newEntity([
+            'email' => 'mark@example.com',
+            'name' => 'Mark',
+            'password' => (new DefaultPasswordHasher())->hash('cakefest2023'),
+        ]);
+        $user = $users->saveOrFail($user);
+        $other = $users->newEntity([
+            'email' => 'admad@example.com',
+            'name' => 'ADmad',
+            'password' => (new DefaultPasswordHasher())->hash('correct horse battery stapler'),
+        ]);
+        $users->saveOrFail($other);
 
+        $calendarItems = $this->fetchTable('CalendarItems');
         $calendarItems->deleteQuery()->where('1=1')->execute();
 
         $entity = $calendarItems->newEntity([
@@ -90,8 +105,11 @@ class PlaygroundCommand extends Command
         $calendarItems->saveOrFail($entity);
 
         $articles = $this->fetchTable('Articles');
+        $articles->deleteQuery()->where('1=1')->execute();
+
         $article = $articles->newEntity([
             'title' => 'First post',
+            'user_id' => $user->id,
             'markdown' => 'This is my first post',
             'status' => ArticleStatus::DRAFT->value,
         ]);

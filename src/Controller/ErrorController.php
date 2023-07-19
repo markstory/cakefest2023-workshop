@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use Cake\Event\EventInterface;
+use Cake\View\JsonView;
 
 /**
  * Error Handling Controller
@@ -25,6 +26,11 @@ use Cake\Event\EventInterface;
  */
 class ErrorController extends AppController
 {
+    public function viewClasses(): array
+    {
+        return [JsonView::class];
+    }
+
     /**
      * Initialization hook method.
      *
@@ -32,7 +38,7 @@ class ErrorController extends AppController
      */
     public function initialize(): void
     {
-        $this->loadComponent('RequestHandler');
+        parent::initialize();
     }
 
     /**
@@ -54,8 +60,6 @@ class ErrorController extends AppController
     public function beforeRender(EventInterface $event)
     {
         parent::beforeRender($event);
-
-        $this->viewBuilder()->setTemplatePath('Error');
     }
 
     /**

@@ -33,8 +33,18 @@ class InitialSchema extends AbstractMigration
             ]);
         $table->create();
 
+        $table = $this->table('users');
+        $table->addColumn('email', 'string', ['null' => false])
+            ->addColumn('name', 'string', ['null' => false])
+            ->addColumn('password', 'string', ['null' => false])
+            ->addColumn('sudo_until', 'datetime', ['null' => true])
+            ->addColumn('created', 'datetime', ['null' => false, 'default' => null])
+            ->addColumn('modified', 'datetime', ['null' => false, 'default' => null]);
+        $table->create();
+
         $table = $this->table('articles');
         $table->addColumn('title', 'string', ['null' => false, 'limit' => null])
+            ->addColumn('user_id', 'biginteger', ['null' => false, 'default' => null])
             ->addColumn('markdown', 'text')
             ->addColumn('html', 'text')
             ->addColumn('status', 'string')
