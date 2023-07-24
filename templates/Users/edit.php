@@ -24,8 +24,6 @@
                 <?php
                     echo $this->Form->control('email');
                     echo $this->Form->control('name');
-                    echo $this->Form->control('password');
-                    echo $this->Form->control('sudo_until', ['empty' => true]);
                 ?>
             </fieldset>
             <?= $this->Form->button(__('Submit')) ?>

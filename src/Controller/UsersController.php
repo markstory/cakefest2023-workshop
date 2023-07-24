@@ -95,7 +95,7 @@ class UsersController extends AppController
     public function edit($id = null)
     {
         $user = $this->Users->get($id);
-        $action = $this->request->is('post') ? 'editWrite' : 'edit';
+        $action = $this->request->is('get') ? 'edit' : 'editWrite';
         $this->Authorization->authorize($user, $action);
 
         if ($this->request->is(['patch', 'post', 'put'])) {
@@ -103,7 +103,7 @@ class UsersController extends AppController
             if ($this->Users->save($user)) {
                 $this->Flash->success(__('The user has been saved.'));
 
-                return $this->redirect(['action' => 'index']);
+                return $this->redirect(['action' => 'edit', $user->id]);
             }
             $this->Flash->error(__('The user could not be saved. Please, try again.'));
         }

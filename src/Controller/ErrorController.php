@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace App\Controller;
 
+use App\Policy\SudoRequiredException;
 use Cake\Event\EventInterface;
 use Cake\View\JsonView;
 
@@ -35,26 +36,6 @@ class ErrorController extends AppController
     }
 
     /**
-     * Initialization hook method.
-     *
-     * @return void
-     */
-    public function initialize(): void
-    {
-        parent::initialize();
-    }
-
-    /**
-     * beforeFilter callback.
-     *
-     * @param \Cake\Event\EventInterface<\Cake\Controller\Controller> $event Event.
-     * @return \Cake\Http\Response|null|void
-     */
-    public function beforeFilter(EventInterface $event)
-    {
-    }
-
-    /**
      * beforeRender callback.
      *
      * @param \Cake\Event\EventInterface<\Cake\Controller\Controller> $event Event.
@@ -63,15 +44,12 @@ class ErrorController extends AppController
     public function beforeRender(EventInterface $event)
     {
         parent::beforeRender($event);
-    }
 
-    /**
-     * afterFilter callback.
-     *
-     * @param \Cake\Event\EventInterface<\Cake\Controller\Controller> $event Event.
-     * @return \Cake\Http\Response|null|void
-     */
-    public function afterFilter(EventInterface $event)
-    {
+        $builder = $this->viewBuilder();
+        $builder->setTemplatePath('Error');
+        $error = $builder->getVar('error');
+        if ($error instanceof SudoRequiredException) {
+            $builder->setTemplate('sudo_required');
+        }
     }
 }
