@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Controller;
 
 use App\Controller\UsersController;
+use App\Model\Entity\User;
 use Cake\TestSuite\IntegrationTestTrait;
 use Cake\TestSuite\TestCase;
 
@@ -26,58 +27,75 @@ class UsersControllerTest extends TestCase
         'app.Articles',
     ];
 
-    /**
-     * Test index method
-     *
-     * @return void
-     * @uses \App\Controller\UsersController::index()
-     */
-    public function testIndex(): void
+    protected function login(User $user)
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->session([
+            'Auth' => $user,
+        ]);
     }
 
-    /**
-     * Test view method
-     *
-     * @return void
-     * @uses \App\Controller\UsersController::view()
-     */
-    public function testView(): void
-    {
-        $this->markTestIncomplete('Not implemented yet.');
+    protected function createUser(string $name, string $email) {
+        $users = $this->fetchTable('Users');
+        $user = $users->newEntity([
+            'name' => $name,
+            'email' => $email,
+        ]);
+        $user->password = 'cakefest2023';
+        $users->saveOrFail($user);
+
+        return $user;
     }
 
-    /**
-     * Test add method
-     *
-     * @return void
-     * @uses \App\Controller\UsersController::add()
-     */
-    public function testAdd(): void
+    public function testEditGet(): void
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $user = $this->createUser('Mark', 'mark@example.com');
+        $this->login($user);
+        $this->enableCsrfToken();
+        $this->get("/users/edit/{$user->id}");
+
+        $this->assertResponseOk();
+        $this->assertResponseContains($user->name);
+        $this->assertResponseContains($user->email);
     }
 
-    /**
-     * Test edit method
-     *
-     * @return void
-     * @uses \App\Controller\UsersController::edit()
-     */
-    public function testEdit(): void
+    public function testEditPostRequiresSudo(): void
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $user = $this->createUser('Mark', 'mark@example.com');
+        $this->login($user);
+        $this->enableCsrfToken();
+        $this->post("/users/edit/{$user->id}", [
+            'name' => 'Markus',
+        ]);
+
+        $this->assertResponseCode(403);
+        $this->assertResponseContains('sudo-required');
     }
 
-    /**
-     * Test delete method
-     *
-     * @return void
-     * @uses \App\Controller\UsersController::delete()
-     */
-    public function testDelete(): void
+    public function testEditPostWithSudoFailure(): void
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $user = $this->createUser('Mark', 'mark@example.com');
+        $this->login($user);
+        $this->enableCsrfToken();
+        $this->post("/users/edit/{$user->id}", [
+            'op' => 'sudo_activate',
+            'password' => 'wrong',
+            'name' => 'Markus',
+        ]);
+
+        $this->assertResponseCode(403);
+    }
+
+    public function testEditPostWithSudoSuccess(): void
+    {
+        $user = $this->createUser('Mark', 'mark@example.com');
+        $this->login($user);
+        $this->enableCsrfToken();
+        $this->post("/users/edit/{$user->id}", [
+            'op' => 'sudo_activate',
+            'password' => 'cakefest2023',
+            'name' => 'Markus',
+        ]);
+
+        $this->assertRedirect("/users/edit/{$user->id}");
     }
 }
