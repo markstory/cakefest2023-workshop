@@ -5,7 +5,13 @@ use Cake\Utility\Hash;
 ?>
 <div class="sudo-required form content">
     <?= $this->Form->create() ?>
+    <?= $this->Form->hidden('op', ['value' => 'sudo_activate']) ?>
     <?php foreach (Hash::flatten($this->request->getData()) as $key => $value): ?>
+        <?php
+        if ($key === 'op' || $key === 'password') {
+            continue;
+        }
+        ?>
         <?= $this->Form->hidden($key, ['value' => $value]) ?>
     <?php endforeach; ?>
     <fieldset>

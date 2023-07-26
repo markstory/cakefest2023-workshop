@@ -16,7 +16,11 @@ declare(strict_types=1);
  */
 namespace App\Controller;
 
+use App\Model\Entity\User;
+use App\Policy\SudoRequiredException;
 use Cake\Controller\Controller;
+use Cake\Event\EventInterface;
+use Cake\Log\Log;
 use Cake\View\JsonView;
 
 /**
@@ -48,6 +52,35 @@ class AppController extends Controller
         $this->loadComponent('Flash');
         $this->loadComponent('Authentication.Authentication');
         $this->loadComponent('Authorization.Authorization');
+    }
+
+    public function beforeFilter(EventInterface $event)
+    {
+        parent::beforeFilter($event);
+        if ($this->request->getData('op') === 'sudo_activate') {
+            $this->activateSudo();
+        }
+    }
+
+    protected function activateSudo()
+    {
+        $password = $this->request->getData('password');
+        $user = $this->Authentication->getIdentity()->getOriginalData();
+        assert($user instanceof User, 'requires a user instance');
+        if ($user->activateSudo($password)) {
+            $users = $this->fetchTable('Users');
+            $users->saveOrFail($user);
+
+            $data = $this->request->getData();
+            unset($data['op'], $data['password']);
+            $this->request = $this->request->withParsedBody($data);
+
+            Log::info('user.activate_sudo', ['id' => $user->id, 'scope' => 'audit']);
+            return true;
+        }
+
+        $this->Flash->error('Sudo failed, password was incorrect');
+        throw new SudoRequiredException();
     }
 
     public function viewClasses(): array

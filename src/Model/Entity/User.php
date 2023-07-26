@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Model\Entity;
 
+use Authentication\PasswordHasher\DefaultPasswordHasher;
+use Cake\I18n\DateTime;
 use Cake\ORM\Entity;
 
 /**
@@ -43,4 +45,24 @@ class User extends Entity
     protected array $_hidden = [
         'password',
     ];
+
+    protected function _setPassword(string $password) : ?string
+    {
+        if (strlen($password) > 0) {
+            return (new DefaultPasswordHasher())->hash($password);
+        }
+    }
+
+    public function activateSudo(string $password): bool
+    {
+        $hasher = new DefaultPasswordHasher();
+        if ($hasher->check($password, $this->password)) {
+            // The sudo activation timeout could be application configuration as well.
+            $this->sudo_until = DateTime::now()->modify('+15 minutes');
+
+            return true;
+        }
+
+        return false;
+    }
 }

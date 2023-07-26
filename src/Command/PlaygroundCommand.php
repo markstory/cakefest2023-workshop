@@ -67,7 +67,7 @@ class PlaygroundCommand extends Command
         $user = $users->newEntity([
             'email' => 'mark@example.com',
             'name' => 'Mark',
-            'password' => (new DefaultPasswordHasher())->hash('cakefest2023'),
+            'password' => 'cakefest2023',
         ]);
         $user = $users->saveOrFail($user);
         $other = $users->newEntity([
