@@ -34,20 +34,32 @@ bin/cake server -p 8765
 
 Then visit `http://localhost:8765` to see the welcome page.
 
-## Update
+### mkcert & stunnel
 
-Since this skeleton is a starting point for your application and various files
-would have been modified as per your needs, there isn't a way to provide
-automated upgrades, so you have to do any updates manually.
+For the webauthn example, the application needs to be behind a TLS webserver.
+The cakephp dev server can't do TLS, so I'm using a pair of CLI utilities you
+can generate an HTTPs proxy for the cakephp dev server. I found this pretty
+simple to use on linux.
+
+Generate certificates for your local machine using `mkcert`
+
+```bash
+mkcert localhost
+cat localhost.pem localhost-key.pem > localhost-bundle.pem
+chmod 0666 *.pem
+```
+
+This will generate certificate & key file. Create the bundled certificate
+for `stunnel`
+
+Then in one terminal, run: `bin/cake server` and then in another run 
+
+```bash
+sudo stunnel3 -f -d 443 -r 8765 -p ./localhost-bundle.pem
+```
 
 ## Configuration
 
 Read and edit the environment specific `config/app_local.php` and set up the
 `'Datasources'` and any other configuration relevant for your application.
 Other environment agnostic settings can be changed in `config/app.php`.
-
-## Layout
-
-The app skeleton uses [Milligram](https://milligram.io/) (v1.3) minimalist CSS
-framework by default. You can, however, replace it with any other library or
-custom styles.

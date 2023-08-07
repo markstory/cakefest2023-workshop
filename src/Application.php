@@ -78,6 +78,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
         }
 
         $this->addPlugin('Authentication');
+        $this->addPlugin('App/Webauthn');
     }
 
     /**
@@ -166,7 +167,13 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             'fields' => $fields,
             'loginUrl' => $loginUrl,
         ]);
-        $service->loadIdentifier('Authentication.Password', ['fields' => $fields]);
+        $service->loadAuthenticator('App/Webauthn.Webauthn', [
+            'fields' => $fields,
+            'rpId' => $request->getUri()->getHost(),
+            'loginUrl' => $loginUrl,
+        ]);
+
+        $service->loadIdentifier('Authentication.Password', ['fields' => $fields, 'finder' => 'login']);
 
         return $service;
     }

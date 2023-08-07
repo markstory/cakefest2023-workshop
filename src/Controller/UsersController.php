@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Webauthn\Model\LoginChallenge;
+use Authentication\Authenticator\Result;
 use Cake\Routing\Router;
 
 /**
@@ -24,13 +26,28 @@ class UsersController extends AppController
         $this->Authorization->skipAuthorization();
 
         $result = $this->Authentication->getResult();
+        // Login was successful, or we are already logged in.
         if ($result->isValid()) {
             $target = $this->Authentication->getLoginRedirect() ?? Router::url(['action' => 'view']);
 
             return $this->redirect($target);
         }
         if ($this->request->is('post')) {
-            $this->Flash->error('Invalid username or password');
+            // Could be UI flow that is username -> get user
+            // determine login type, show passwords/u2f instead.
+            $useWebauth = false;
+            if ($result->getStatus() === Result::FAILURE_CREDENTIALS_MISSING) {
+                $loginData = $result->getData();
+                if ($loginData instanceof LoginChallenge) {
+                    $useWebauth = true;
+                    $this->request->getSession()->write('Webauthn.challenge', $loginData->challenge);
+                    $this->set('loginData', $loginData);
+                    $this->viewBuilder()->setTemplate('login_u2f');
+                }
+            }
+            if (!$useWebauth) {
+                $this->Flash->error('Invalid username or password');
+            }
         }
     }
 

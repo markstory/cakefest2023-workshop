@@ -1,4 +1,5 @@
 <?php
 return [
-    'Cake/Repl' => []
+    'Cake/Repl' => [],
+    'App/Webauthn' => []
 ];

@@ -160,6 +160,12 @@ if (!$fullBaseUrl) {
     }
 
     $httpHost = env('HTTP_HOST');
+
+    // XXX: Because this demo uses stunnel, I hack localhost to be https. 
+    if ($httpHost === 'localhost') {
+        $s = 's';
+    }
+
     if (isset($httpHost)) {
         $fullBaseUrl = 'http' . $s . '://' . $httpHost;
     }

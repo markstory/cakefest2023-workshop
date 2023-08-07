@@ -9,6 +9,7 @@ use Cake\Command\Command;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
+use Cake\Utility\Text;
 
 /**
  * DateTimePlayground command.
@@ -67,14 +68,17 @@ class PlaygroundCommand extends Command
         $user = $users->newEntity([
             'email' => 'mark@example.com',
             'name' => 'Mark',
-            'password' => 'cakefest2023',
         ]);
+        $user->password = 'cakefest2023';
+        $user->uuid = Text::uuid();
         $user = $users->saveOrFail($user);
+
         $other = $users->newEntity([
             'email' => 'admad@example.com',
             'name' => 'ADmad',
-            'password' => (new DefaultPasswordHasher())->hash('correct horse battery stapler'),
         ]);
+        $other->uuid = Text::uuid();
+        $other->password = 'correct horse battery stapler';
         $users->saveOrFail($other);
 
         $calendarItems = $this->fetchTable('CalendarItems');
