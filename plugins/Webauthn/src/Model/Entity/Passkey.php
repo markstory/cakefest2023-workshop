@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Webauthn\Model\Entity;
 
+use Cake\Log\Log;
 use Cake\ORM\Entity;
 use stdClass;
 
@@ -29,13 +30,14 @@ class Passkey extends Entity
      */
     protected array $_accessible = [
         'display_name' => true,
+        'for_login' => true,
     ];
 
-    private bool $decoded;
+    private stdClass $decoded;
 
     protected function getPayload(): stdClass
     {
-        if ($this->decoded == null) {
+        if (!isset($this->decoded)) {
             $this->decoded = json_decode($this->payload);
         }
 

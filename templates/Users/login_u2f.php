@@ -12,7 +12,7 @@ declare(strict_types=1);
 <?php if (isset($loginData)): ?>
 <?= $this->element('App/Webauthn.webauthn-utils'); ?>
 <script type="text/javascript">
-async function completeLogin(loginData, csrfToken) {
+async function completeLogin(loginData, email, csrfToken) {
     recursiveBase64ToArrayBuffer(loginData);
     const cred = await navigator.credentials.get(loginData);
 
@@ -22,7 +22,7 @@ async function completeLogin(loginData, csrfToken) {
         authenticator: arrayBufferToBase64(cred.response.authenticatorData),
         signature: arrayBufferToBase64(cred.response.signature),
         userHandle: arrayBufferToBase64(cred.response.userHandle),
-        username: document.querySelector('#username').value,
+        email: email,
     };
     const response = await sendRequest({
         url: '/users/login',
@@ -30,16 +30,20 @@ async function completeLogin(loginData, csrfToken) {
         data: requestData,
         csrfToken: csrfToken,
     });
-    if (response.redirected) {
+    if (response.ok) {
         window.location = '/users/view';
     } else {
         const messageEl = document.getElementById('login-flash');
-        messageEl.innerText = "Login failed",
+        messageEl.innerText = 'Your Passkey authentication failed';
         messageEl.style.display = 'block';
     }
 }
 
-completeLogin(<?= json_encode($loginData->loginData); ?>, '<?= $this->request->getAttribute('csrfToken') ?>');
+completeLogin(
+    <?= json_encode($loginData->loginData); ?>,
+    <?= json_encode($email) ?>,
+    '<?= $this->request->getAttribute('csrfToken') ?>'
+);
 </script>
 <?php endif ?>
 

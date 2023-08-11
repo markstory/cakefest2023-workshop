@@ -50,7 +50,7 @@ class UsersTable extends Table
         $this->hasMany('Articles', [
             'foreignKey' => 'user_id',
         ]);
-        $this->hasMany('Webauthn.Passkeys', [
+        $this->hasMany('App/Webauthn.Passkeys', [
             'foreignKey' => 'user_id',
         ]);
     }
@@ -99,7 +99,7 @@ class UsersTable extends Table
         return $rules;
     }
 
-    public function findForLogin(SelectQuery $query): SelectQuery 
+    public function findLogin(SelectQuery $query): SelectQuery 
     {
         return $query->contain('Passkeys');
     }

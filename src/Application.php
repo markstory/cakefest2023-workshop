@@ -170,12 +170,20 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             'loginUrl' => $loginUrl,
         ]);
         $service->loadAuthenticator('App/Webauthn.Webauthn', [
-            'fields' => $fields,
             'rpId' => $request->getUri()->getHost(),
             'loginUrl' => $loginUrl,
+            'fields' => $fields,
         ]);
 
-        $service->loadIdentifier('Authentication.Password', ['fields' => $fields, 'finder' => 'login']);
+        $service->loadIdentifier('Authentication.Password', [
+            'fields' => $fields,
+            'resolver' => [
+                'className' => 'Authentication.Orm',
+                'fields' => $fields,
+                'userModel' => 'Users',
+                'finder' => 'login',
+            ],
+        ]);
 
         return $service;
     }

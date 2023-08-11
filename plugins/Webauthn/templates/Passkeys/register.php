@@ -17,13 +17,18 @@ echo $this->Form->create(null, [
     'onsubmit' => 'doComplete(event)'
 ]);
 echo $this->Form->control('display_name');
+echo $this->Form->control('for_login', [
+    'type' => 'checkbox',
+    'hiddenField' => false,
+    'label' => 'Use key for login instead of password'
+]);
 echo $this->Form->submit('Add U2F device');
 echo $this->Form->end();
 ?>
 <?php if (isset($registerData)): ?>
 <?= $this->element('webauthn-utils'); ?>
 <script type="text/javascript">
-async function completeRegistration(registerData, displayName, csrfToken) {
+async function completeRegistration(registerData, displayName, forLogin, csrfToken) {
     recursiveBase64ToArrayBuffer(registerData);
 
     const cred = await navigator.credentials.create(registerData);
@@ -31,6 +36,7 @@ async function completeRegistration(registerData, displayName, csrfToken) {
         clientData: arrayBufferToBase64(cred.response.clientDataJSON),
         attestation: arrayBufferToBase64(cred.response.attestationObject),
         display_name: displayName,
+        for_login: forLogin,
     };
 
     const response = await sendRequest({
@@ -54,10 +60,12 @@ function doComplete(event) {
     event.stopPropagation();
     var form = event.target;
     var displayName = form.elements.display_name.value;
+    var forLogin = form.elements.for_login.checked;
 
     completeRegistration(
         <?= json_encode($registerData->registration); ?>,
         displayName,
+        forLogin,
         '<?= $this->request->getAttribute('csrfToken') ?>',
     );
 }

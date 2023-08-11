@@ -102,7 +102,6 @@ class PasskeysController extends AppController
 
     public function completeRegister(): void
     {
-        $this->Authorization->skipAuthorization();
 
         $request = $this->request;
         $request->allowMethod('POST');
@@ -135,7 +134,11 @@ class PasskeysController extends AppController
             $this->Passkeys->getConnection()->transactional(function () use ($user, $processData): void {
                 $alias = $this->request->getData('display_name');
                 $passkey = $this->Passkeys->createFromData($processData, $alias);
+
+                $this->Authorization->authorize($passkey, 'add');
+
                 $passkey->user_id = $user->id;
+                $passkey->for_login = (bool) $this->request->getData('for_login');
                 $this->Passkeys->saveOrFail($passkey);
             });
 

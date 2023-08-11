@@ -22,22 +22,17 @@ class CreateData
     public function getPayload()
     {
         $data = (array)$this->payload;
-        $data['credentialId'] = base64_encode($data['credentialId']);
+        $output = [
+            'credentialId' => base64_encode($data['credentialId']),
+            'credentialPublicKey' => $data['credentialPublicKey'],
+            'attestationFormat' => $data['attestationFormat'],
+            'certificateIssuer' => $data['certificateIssuer'],
+            'certificateSubject' => $data['certificateSubject'],
+            'rootValid' => $data['rootValid'],
+            'userPresent' => $data['userPresent'],
+            'userVerified' => $data['userVerified'],
+        ];
 
-        return $data;
+        return $output;
     }
-
-    // TODO add more methods to increse ability to validate passkey data.
-    //
-    // Available options are:
-    //
-    // - credentialPublicKey
-    // - certificate
-    // - rpId
-    // - attestationFormat
-    // - certificateIssue
-    // - certificateSubject
-    // - rootValid
-    // - userPresent
-    // - userVerified
 }

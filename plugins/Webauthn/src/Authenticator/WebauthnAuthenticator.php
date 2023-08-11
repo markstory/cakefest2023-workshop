@@ -145,9 +145,11 @@ class WebauthnAuthenticator extends AbstractAuthenticator
         $hasData = true;
         $data = $request->getData();
         $requiredKeys = ['clientData', 'authenticator', 'signature', 'id'];
+        $missingKey = '';
         foreach ($requiredKeys as $key) {
             if (empty($data[$key])) {
                 $hasData = false;
+                $missingKey = $key;
                 break;
             }
         }
@@ -155,7 +157,18 @@ class WebauthnAuthenticator extends AbstractAuthenticator
         // respond with another challenge.
         $challenge = $request->getSession()->read('Webauthn.challenge');
         if (!$hasData || !$challenge) {
-            Log::debug('Missing required request data, or Webauthn.challenge data in session.', 'webauthn');
+            $message = 'Missing required data';
+            if (!$hasData) {
+                $message .= ' request data';
+            }
+            if ($missingKey) {
+                $message .= " key {$missingKey} was not found";
+            }
+            if (!$challenge) {
+                $message .= ' Webauthn.challenge data in session.';
+            }
+            Log::debug($message, 'webauthn');
+            Log::info($message);
 
             $ids = collection($user->passkeys)->extract('credential_id')->toList();
             $ids = array_map('base64_decode', $ids);

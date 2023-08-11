@@ -13,20 +13,20 @@ use Cake\Validation\Validator;
 /**
  * Passkeys Model
  *
- * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
- * @method \App\Model\Entity\Passkey newEmptyEntity()
- * @method \App\Model\Entity\Passkey newEntity(array $data, array $options = [])
- * @method \App\Model\Entity\Passkey[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\Passkey get($primaryKey, $options = [])
- * @method \App\Model\Entity\Passkey findOrCreate($search, ?callable $callback = null, $options = [])
- * @method \App\Model\Entity\Passkey patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \App\Model\Entity\Passkey[] patchEntities(iterable $entities, array $data, array $options = [])
- * @method \App\Model\Entity\Passkey|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\Passkey saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\Passkey[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
- * @method \App\Model\Entity\Passkey[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
- * @method \App\Model\Entity\Passkey[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
- * @method \App\Model\Entity\Passkey[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @property \App\Webauthn\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
+ * @method \App\Webauthn\Model\Entity\Passkey newEmptyEntity()
+ * @method \App\Webauthn\Model\Entity\Passkey newEntity(array $data, array $options = [])
+ * @method \App\Webauthn\Model\Entity\Passkey[] newEntities(array $data, array $options = [])
+ * @method \App\Webauthn\Model\Entity\Passkey get($primaryKey, $options = [])
+ * @method \App\Webauthn\Model\Entity\Passkey findOrCreate($search, ?callable $callback = null, $options = [])
+ * @method \App\Webauthn\Model\Entity\Passkey patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Webauthn\Model\Entity\Passkey[] patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \App\Webauthn\Model\Entity\Passkey|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Webauthn\Model\Entity\Passkey saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Webauthn\Model\Entity\Passkey[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
+ * @method \App\Webauthn\Model\Entity\Passkey[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
+ * @method \App\Webauthn\Model\Entity\Passkey[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
+ * @method \App\Webauthn\Model\Entity\Passkey[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
  */
 class PasskeysTable extends Table
 {
@@ -70,6 +70,10 @@ class PasskeysTable extends Table
             ->scalar('payload')
             ->requirePresence('payload', 'create')
             ->notEmptyString('payload');
+
+        $validator
+            ->scalar('for_login')
+            ->boolean('for_login');
 
         return $validator;
     }

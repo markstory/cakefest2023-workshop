@@ -5,7 +5,12 @@ namespace App\Controller;
 
 use App\Webauthn\Model\LoginChallenge;
 use Authentication\Authenticator\Result;
+use Cake\Http\Exception\NotFoundException;
+use Cake\Log\Log;
 use Cake\Routing\Router;
+use Cake\View\JsonView;
+
+use function Cake\Collection\collection;
 
 /**
  * Users Controller
@@ -14,6 +19,11 @@ use Cake\Routing\Router;
  */
 class UsersController extends AppController
 {
+    public function viewClasses(): array
+    {
+        return [JsonView::class];
+    }
+
     public function initialize(): void
     {
         parent::initialize();
@@ -30,25 +40,65 @@ class UsersController extends AppController
         if ($result->isValid()) {
             $target = $this->Authentication->getLoginRedirect() ?? Router::url(['action' => 'view']);
 
+            if ($this->request->is('json')) {
+                $this->set('redirect', $target);
+                $this->viewBuilder()->setOption('serialize', ['redirect']);
+
+                return;
+            }
+
             return $this->redirect($target);
         }
+        Log::info('request data' . json_encode($this->request->getData()));
+
+        $template = 'login_start';
         if ($this->request->is('post')) {
-            // Could be UI flow that is username -> get user
-            // determine login type, show passwords/u2f instead.
+            $email = $this->request->getData('email');
+            $this->set('email', $email);
+
+            $user = null;
+            if ($email) {
+                $user = $this->Users->find('login')
+                    ->where(['Users.email' => $email])
+                    ->first();
+            }
+
+            // We should use passkey for login if the user has one configured.
             $useWebauth = false;
+            if ($user) {
+                $useWebauth = collection($user->passkeys)->some(fn ($item) => $item->for_login);
+            }
+
             if ($result->getStatus() === Result::FAILURE_CREDENTIALS_MISSING) {
+                Log::info('Start u2f');
                 $loginData = $result->getData();
                 if ($loginData instanceof LoginChallenge) {
-                    $useWebauth = true;
                     $this->request->getSession()->write('Webauthn.challenge', $loginData->challenge);
                     $this->set('loginData', $loginData);
-                    $this->viewBuilder()->setTemplate('login_u2f');
                 }
             }
-            if (!$useWebauth) {
-                $this->Flash->error('Invalid username or password');
+            Log::info('Auth result ' . $result->getStatus());
+            // TODO handle invalid U2F validation.
+
+            if ($useWebauth) {
+                $template = 'login_u2f';
+            } else {
+                $template = 'login_password';
+            }
+
+            if (!$useWebauth && $this->request->getData('password')) {
+                $this->Flash->error('Invalid email or password');
             }
         }
+
+        $builder = $this->viewBuilder();
+        if ($this->request->is('json')) {
+            $builder->setClassName(JsonView::class);
+        }
+
+        $builder
+            ->setTemplate($template)
+            ->setOption('serialize', ['success', 'redirect', 'message']);
     }
 
     public function logout()
@@ -69,8 +119,12 @@ class UsersController extends AppController
     public function view($id = null)
     {
         $this->Authorization->skipAuthorization();
+        $identity = $this->Authentication->getIdentity();
+        if ($id === null && $identity) {
+            $id = $identity->getIdentifier();
+        }
         if ($id === null) {
-            $id = $this->Authentication->getIdentity()->id;
+            throw new NotFoundException();
         }
 
         $user = $this->Users->get($id, [
