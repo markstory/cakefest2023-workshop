@@ -43,15 +43,15 @@ class WebauthnPlugin extends BasePlugin
             'App/Webauthn',
             ['path' => '/webauthn'],
             function (RouteBuilder $builder) {
-                $builder->get('/passkeys', ['controller' => 'Passkeys', 'action' => 'index']);
+                $builder->get('/passkeys', 'Passkeys::index');
 
-                $builder->delete('/passkeys/{id}', ['controller' => 'Passkeys', 'action' => 'delete'])
+                $builder->delete('/passkeys/{id}', 'Passkeys::delete')
                     ->setPass(['id']);
-                $builder->post('/passkeys/{id}/delete', ['controller' => 'Passkeys', 'action' => 'delete'])
+                $builder->post('/passkeys/{id}/delete', 'Passkeys::delete')
                     ->setPass(['id']);
 
-                $builder->get('/passkeys/add', ['controller' => 'Passkeys', 'action' => 'startRegister']);
-                $builder->post('/passkeys/add/complete', ['controller' => 'Passkeys', 'action' => 'completeRegister']);
+                $builder->get('/passkeys/add', 'Passkeys::startRegister');
+                $builder->post('/passkeys/add/complete', 'Passkeys::completeRegister');
             }
         );
         parent::routes($routes);

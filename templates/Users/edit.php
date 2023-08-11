@@ -16,7 +16,7 @@
             <?= $this->Html->link(__('List Users'), ['action' => 'index'], ['class' => 'side-nav-item']) ?>
             <?= $this->Html->link(
                 __('View Passkeys'),
-                ['_path' => 'Webauthn.Passkeys::index'],
+                ['_path' => 'App/Webauthn.Passkeys::index'],
                 ['class' => 'side-nav-item']
             ) ?>
         </div>
