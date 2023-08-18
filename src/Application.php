@@ -78,6 +78,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             $this->addPlugin('DebugKit');
         }
 
+        $this->addPlugin('Authorization');
         $this->addPlugin('Authentication');
         $this->addPlugin('App/Webauthn');
     }
@@ -147,8 +148,6 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
         $this->addOptionalPlugin('Bake');
 
         $this->addPlugin('Migrations');
-        $this->addPlugin('Authentication');
-        $this->addPlugin('Authorization');
     }
 
     public function getAuthenticationService(ServerRequestInterface $request): AuthenticationServiceInterface
@@ -174,7 +173,6 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             'loginUrl' => $loginUrl,
             'fields' => $fields,
         ]);
-
         $service->loadIdentifier('Authentication.Password', [
             'fields' => $fields,
             'resolver' => [

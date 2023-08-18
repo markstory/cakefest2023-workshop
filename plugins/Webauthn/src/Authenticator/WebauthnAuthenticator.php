@@ -27,7 +27,7 @@ class WebauthnAuthenticator extends AbstractAuthenticator
         'rpId' => 'localhost',
         'formats' => ['apple', 'android-key', 'android-safetynet', 'apple', 'fido-u2f', 'packed', 'tpm'],
         // The certificate roots you want to trust. Default is to accept most providers.
-        'certificates' => ['apple', 'yubico', 'hypersecu', 'google', 'microsoft', 'mds'],
+        'certificates' => ['apple', 'yubico', 'hypersecu', 'googleHardware', 'microsoftTpmCollection'],
         // Property on the user that has the registered passkeys
         'passkeysProperty' => 'passkeys',
         // Device types you accept. Default is all current types.
@@ -70,7 +70,7 @@ class WebauthnAuthenticator extends AbstractAuthenticator
     protected function addRootCertificate(string $name): void
     {
         // TODO add file path support?
-        $certificatePath = ROOT . "vendor/lbuchs/WebAuthn/_test/rootCertificates/{$name}.pem";
+        $certificatePath = ROOT . "vendor/lbuchs/webauthn/_test/rootCertificates/{$name}.pem";
         $this->client->addRootCertificates($certificatePath);
     }
 

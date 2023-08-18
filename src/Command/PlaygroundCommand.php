@@ -123,22 +123,6 @@ class PlaygroundCommand extends Command
         return self::CODE_SUCCESS;
     }
 
-    // {{{
-    // Show the enum class
-    // Show the entity class (no changes really)
-    // Show the table class with a column change.
-    // Load up an article
-    // Show how the enum type is hydrated.
-    // Show that we can compare to other enum values.
-    // Save record.
-    // This gives a better workflow over constants in classes
-    // and needing validation logic. Now if invalid data
-    // is provided, save will fail.
-    // This is a great improvement, that leverages features in PHP 8.1 which is why it
-    // requires 5.x.
-    // This feature is great to opt-into after you upgrade. You can incrementally
-    // update your application code to use enum types for both string and integer enums;
-    // }}}
     protected function enumTypes($args, $io) {
         $articles = $this->fetchTable('Articles');
 
@@ -150,61 +134,19 @@ class PlaygroundCommand extends Command
     {
         $calendarItems = $this->fetchTable('CalendarItems');
 
-        // {{{ Load a date record up and look at the types.
-        // $date->start_date is a date.
-        // It is not a datetime
-        // it has no time components.
-        // while it has many similar methods to datetime
-        // format() modify(), addDay(), addMonth()
-        // it cannot be modified by time.
-        // great for calendar days when you don't
-        // want to worry about time or timezones mucking up your math
-        // }}}
+        $time = $calendarItems->findByTitle('Time only')->firstOrFail();
         $day = $calendarItems->findByTitle('All day event')->firstOrFail();
         eval(breakpoint());
 
-        // {{{ Load a time record up and look at the types.
-        // $date->start_time is a time.
-        // It is not a datetime
-        // it has no date components.
-        // while it has many similar methods to datetime
-        // format() modify(), addHour(), addMinute()
-        // it cannot be modified by day.
-        // great for clocks, or watches.
-        // want to worry about time or timezones mucking up your math
-        // also worth looking at the datetime properties.
-        // }}}
-        $time = $calendarItems->findByTitle('Time only')->firstOrFail();
         eval(breakpoint());
     }
 
-    // {{{
-    // Show different types of queries.
-    //
-    // When you're using queries correctly nothing really has
-    //  changed except autocomplete is better.
-    // Use the different query methods to get at different types of queries.
-    // deleteQuery, insertQuery, updateQuery, selectQuery
-    // }}}
     public function queryClasses(Arguments $args, ConsoleIo $io)
     {
         $articles = $this->fetchTable('Articles');
         eval(breakpoint());
     }
 
-    // {{{
-    // Show finder typing
-    // > Can used named parameters for finder options.
-    // $articles->find('published', status: ArticleStatus::DRAFT);
-    //
-    // > Named parameters are type checked
-    // $articles->find('published', status: 'nope');
-    //
-    // > This cuts down on boilerplate massively
-    // > No more having to type check parameters and see if params
-    // > are valid types. This can help improve gains if you
-    // > use enums.
-    // }}}
     public function typedFinder(Arguments $args, ConsoleIo $io)
     {
         $articles = $this->fetchTable('Articles');
