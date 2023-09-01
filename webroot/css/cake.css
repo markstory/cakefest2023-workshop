@@ -155,6 +155,12 @@ th {
     border-radius: 4px;
     margin-bottom: 1rem;
     cursor: pointer;
+
+    position: absolute;
+    max-width: 65%;
+    top: 2rem;
+    left: -50%;
+    margin-left: 50%;
 }
 .message.hidden {
     display: none;
@@ -173,6 +179,11 @@ th {
     background: var(--color-message-error-bg);
     color: var(--color-message-error-text);
     border-color: var(--color-message-error-border);
+}
+@media screen and (max-width: 640px) {
+  .message {
+    max-width: 90%;
+  }
 }
 
 /* Forms */
