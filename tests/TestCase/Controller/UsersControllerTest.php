@@ -57,45 +57,4 @@ class UsersControllerTest extends TestCase
         $this->assertResponseContains($user->name);
         $this->assertResponseContains($user->email);
     }
-
-    public function testEditPostRequiresSudo(): void
-    {
-        $user = $this->createUser('Mark', 'mark@example.com');
-        $this->login($user);
-        $this->enableCsrfToken();
-        $this->post("/users/edit/{$user->id}", [
-            'name' => 'Markus',
-        ]);
-
-        $this->assertResponseCode(403);
-        $this->assertResponseContains('sudo-required');
-    }
-
-    public function testEditPostWithSudoFailure(): void
-    {
-        $user = $this->createUser('Mark', 'mark@example.com');
-        $this->login($user);
-        $this->enableCsrfToken();
-        $this->post("/users/edit/{$user->id}", [
-            'op' => 'sudo_activate',
-            'password' => 'wrong',
-            'name' => 'Markus',
-        ]);
-
-        $this->assertResponseCode(403);
-    }
-
-    public function testEditPostWithSudoSuccess(): void
-    {
-        $user = $this->createUser('Mark', 'mark@example.com');
-        $this->login($user);
-        $this->enableCsrfToken();
-        $this->post("/users/edit/{$user->id}", [
-            'op' => 'sudo_activate',
-            'password' => 'cakefest2023',
-            'name' => 'Markus',
-        ]);
-
-        $this->assertRedirect("/users/edit/{$user->id}");
-    }
 }

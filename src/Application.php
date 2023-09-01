@@ -118,8 +118,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
                 'httponly' => true,
             ]))
             ->add(new AuthenticationMiddleware($this))
-            ->add(new AuthorizationMiddleware($this))
-            ->add(new SudoRequiredMiddleware($this));
+            ->add(new AuthorizationMiddleware($this));
 
         return $middlewareQueue;
     }

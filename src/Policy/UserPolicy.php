@@ -13,16 +13,6 @@ use Cake\I18n\DateTime;
 class UserPolicy
 {
     /**
-     * Requires the user to have an active sudo time window
-     */
-    protected function requireSudo(IdentityInterface $user): void
-    {
-        if (!$user->sudo_until || $user->sudo_until < DateTime::now()) {
-            throw new SudoRequiredException();
-        }
-    }
-
-    /**
      * Check if $user can add User
      *
      * @param \Authorization\IdentityInterface $user The user.
@@ -56,8 +46,6 @@ class UserPolicy
      */
     public function canEditWrite(IdentityInterface $user, User $resource)
     {
-        $this->requireSudo($user);
-
         // Can update oneself
         return $user->id == $resource->id;
     }
