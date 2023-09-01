@@ -50,9 +50,6 @@ class UsersTable extends Table
         $this->hasMany('Articles', [
             'foreignKey' => 'user_id',
         ]);
-        $this->hasMany('App/Webauthn.Passkeys', [
-            'foreignKey' => 'user_id',
-        ]);
     }
 
     /**
@@ -101,6 +98,7 @@ class UsersTable extends Table
 
     public function findLogin(SelectQuery $query): SelectQuery 
     {
-        return $query->contain('Passkeys');
+        // Add conditions here.
+        return $query;
     }
 }

@@ -11,7 +11,6 @@
             <?= $this->Html->link(__('Edit User'), ['action' => 'edit', $user->id], ['class' => 'side-nav-item']) ?>
             <?= $this->Form->postLink(__('Delete User'), ['action' => 'delete', $user->id], ['confirm' => __('Are you sure you want to delete # {0}?', $user->id), 'class' => 'side-nav-item']) ?>
             <?= $this->Html->link(__('List Users'), ['action' => 'index'], ['class' => 'side-nav-item']) ?>
-            <?= $this->Html->link(__('Add Passkey'), ['plugin' => 'App/Webauthn', 'controller' => 'Passkeys', 'action' => 'startRegister'], ['class' => 'side-nav-item']) ?>
             <?= $this->Html->link(__('Logout'), ['action' => 'logout'], ['class' => 'side-nav-item']) ?>
         </div>
     </aside>

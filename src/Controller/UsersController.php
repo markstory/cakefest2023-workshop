@@ -38,7 +38,7 @@ class UsersController extends AppController
         $result = $this->Authentication->getResult();
         // Login was successful, or we are already logged in.
         if ($result->isValid()) {
-            $target = $this->Authentication->getLoginRedirect() ?? Router::url(['action' => 'view']);
+            $target = $this->Authentication->getLoginRedirect() ?? Router::url(['action' => 'view', 'me']);
 
             if ($this->request->is('json')) {
                 $this->set('redirect', $target);
@@ -50,40 +50,8 @@ class UsersController extends AppController
             return $this->redirect($target);
         }
 
-        $template = 'login_start';
         if ($this->request->is('post')) {
-            $email = $this->request->getData('email');
-            $this->set('email', $email);
-
-            $user = null;
-            if ($email) {
-                $user = $this->Users->find('login')
-                    ->where(['Users.email' => $email])
-                    ->first();
-            }
-
-            // We should use passkey for login if the user has one configured.
-            $useWebauth = false;
-            if ($user) {
-                $useWebauth = collection($user->passkeys)->some(fn ($item) => $item->for_login);
-            }
-
             if ($result->getStatus() === Result::FAILURE_CREDENTIALS_MISSING) {
-                $loginData = $result->getData();
-                if ($loginData instanceof LoginChallenge) {
-                    $this->request->getSession()->write('Webauthn.challenge', $loginData->challenge);
-                    $this->set('loginData', $loginData);
-                }
-            }
-            // TODO handle invalid U2F validation.
-
-            if ($useWebauth) {
-                $template = 'login_u2f';
-            } else {
-                $template = 'login_password';
-            }
-
-            if (!$useWebauth && $this->request->getData('password')) {
                 $this->Flash->error('Invalid email or password');
             }
         }
@@ -93,9 +61,7 @@ class UsersController extends AppController
             $builder->setClassName(JsonView::class);
         }
 
-        $builder
-            ->setTemplate($template)
-            ->setOption('serialize', ['success', 'redirect', 'message']);
+        $builder->setOption('serialize', ['success', 'redirect', 'message']);
     }
 
     public function logout()
@@ -117,7 +83,7 @@ class UsersController extends AppController
     {
         $this->Authorization->skipAuthorization();
         $identity = $this->Authentication->getIdentity();
-        if ($id === null && $identity) {
+        if ($id === null || $id === 'me' && $identity) {
             $id = $identity->getIdentifier();
         }
         if ($id === null) {
