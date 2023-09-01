@@ -49,7 +49,6 @@ class UsersController extends AppController
 
             return $this->redirect($target);
         }
-        Log::info('request data' . json_encode($this->request->getData()));
 
         $template = 'login_start';
         if ($this->request->is('post')) {
@@ -70,14 +69,12 @@ class UsersController extends AppController
             }
 
             if ($result->getStatus() === Result::FAILURE_CREDENTIALS_MISSING) {
-                Log::info('Start u2f');
                 $loginData = $result->getData();
                 if ($loginData instanceof LoginChallenge) {
                     $this->request->getSession()->write('Webauthn.challenge', $loginData->challenge);
                     $this->set('loginData', $loginData);
                 }
             }
-            Log::info('Auth result ' . $result->getStatus());
             // TODO handle invalid U2F validation.
 
             if ($useWebauth) {

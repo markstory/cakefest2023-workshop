@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Webauthn\Controller;
 
 use App\Controller\AppController;
+use App\Webauthn\Model\Entity\Passkey;
 use Cake\ORM\Exception\PersistenceFailedException;
 use Cake\Utility\Text;
 use Cake\View\JsonView;
@@ -77,12 +78,11 @@ class PasskeysController extends AppController
 
     public function startRegister()
     {
-        $this->Authorization->skipAuthorization();
-
         /** @var \Authentication\AuthenticationService $authService */
         $authService = $this->Authentication->getAuthenticationService();
         $webauth = $authService->authenticators()->get('Webauthn');
         $user = $authService->getIdentity()->getOriginalData();
+        $this->Authorization->authorize(new Passkey(), 'add');
 
         $registerData = $webauth->getRegistrationData(
             $user->uuid,
@@ -102,7 +102,6 @@ class PasskeysController extends AppController
 
     public function completeRegister(): void
     {
-
         $request = $this->request;
         $request->allowMethod('POST');
 
@@ -123,6 +122,8 @@ class PasskeysController extends AppController
                 $challenge,
             );
         } catch (WebAuthnException $error) {
+            $this->Authorization->authorize(new Passkey(), 'add');
+
             $this->set('success', false);
             $this->set('message', $error->getMessage());
 

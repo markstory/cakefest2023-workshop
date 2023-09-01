@@ -84,8 +84,6 @@ class WebauthnAuthenticator extends AbstractAuthenticator
         $types = $this->getConfig('deviceTypes');
         $crossPlatform = !in_array('int', $types) && array_intersect(self::TYPE_CROSSPLATFORM, $types) !== [];
 
-        // TODO Make a similar function for existing users
-        // so that 'add a key' works.
         $client = $this->getClient();
         $challengeData = $client->getCreateArgs(
             $userId,
@@ -114,7 +112,7 @@ class WebauthnAuthenticator extends AbstractAuthenticator
             $challenge,
             $this->getConfig('requireUserVerification') === 'required',
             true,
-            false, // TODO make this true.
+            false, // TODO debug why this isn't working with true
         );
 
         return new CreateData($createData);
@@ -168,12 +166,11 @@ class WebauthnAuthenticator extends AbstractAuthenticator
                 $message .= ' Webauthn.challenge data in session.';
             }
             Log::debug($message, 'webauthn');
-            Log::info($message);
 
             $ids = collection($user->passkeys)->extract('credential_id')->toList();
             $ids = array_map('base64_decode', $ids);
 
-            $deviceTypes = $this->getconfig('deviceTypes');
+            $deviceTypes = $this->getConfig('deviceTypes');
             // Get challenge data
             $loginData = $client->getGetArgs(
                 $ids,
@@ -234,6 +231,8 @@ class WebauthnAuthenticator extends AbstractAuthenticator
                 $decoded['signature'],
                 $found->getPublicKey(),
                 $challenge,
+                // This can be a counter on the passkey that is updated each time
+                // login succeeds.
                 null,
                 $this->getConfig('requireUserVerfication') == 'required',
             );
