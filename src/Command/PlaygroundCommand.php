@@ -137,8 +137,6 @@ class PlaygroundCommand extends Command
         $time = $calendarItems->findByTitle('Time only')->firstOrFail();
         $day = $calendarItems->findByTitle('All day event')->firstOrFail();
         eval(breakpoint());
-
-        eval(breakpoint());
     }
 
     public function queryClasses(Arguments $args, ConsoleIo $io)
