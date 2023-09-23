@@ -1,37 +1,33 @@
-# CakePHP Application Skeleton
+# CakeFest 2023 workshop
 
-![Build Status](https://github.com/cakephp/app/actions/workflows/ci.yml/badge.svg?branch=master)
-[![Total Downloads](https://img.shields.io/packagist/dt/cakephp/app.svg?style=flat-square)](https://packagist.org/packages/cakephp/app)
-[![PHPStan](https://img.shields.io/badge/PHPStan-level%207-brightgreen.svg?style=flat-square)](https://github.com/phpstan/phpstan)
+The source code for the workshop given at Cakefest 2023
 
-A skeleton for creating applications with [CakePHP](https://cakephp.org) 5.x.
+## Branches
 
-The framework source code can be found here: [cakephp/cakephp](https://github.com/cakephp/cakephp).
+This repository has several branches for the various stages of my workshop:
+
+- `master` Contains a basic CakePHP 5 demo.
+- `authentication-authorization` Contains a simple application with
+  authentication and authorization setup.
+- `sudomode-complete` Contains the completed sudo-mode application.
+- `webauthn-complete` Contains the completed webauthn/passkeys application.
 
 ## Installation
 
 1. Download [Composer](https://getcomposer.org/doc/00-intro.md) or update `composer self-update`.
-2. Run `php composer.phar create-project --prefer-dist cakephp/app [app_name]`.
+2. Run `php composer.phar install`.
 
 If Composer is installed globally, run
 
 ```bash
-composer create-project --prefer-dist cakephp/app
+composer install
 ```
 
-In case you want to use a custom app dir name (e.g. `/myapp/`):
-
-```bash
-composer create-project --prefer-dist cakephp/app myapp
-```
-
-You can now either use your machine's webserver to view the default home page, or start
-up the built-in webserver with:
+You can now start the CakePHP development server with:
 
 ```bash
 bin/cake server -p 8765
 ```
-
 Then visit `http://localhost:8765` to see the welcome page.
 
 ### mkcert & stunnel
