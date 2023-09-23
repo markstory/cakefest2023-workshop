@@ -3,9 +3,7 @@ declare(strict_types=1);
 
 namespace App\Webauthn\Model\Entity;
 
-use Cake\Log\Log;
 use Cake\ORM\Entity;
-use stdClass;
 
 /**
  * Passkey Entity
@@ -13,7 +11,7 @@ use stdClass;
  * @property int $id
  * @property int $user_id
  * @property string $credential_id
- * @property string $payload
+ * @property \array $payload
  *
  * @property \App\Model\Entity\User $user
  */
@@ -33,29 +31,18 @@ class Passkey extends Entity
         'for_login' => true,
     ];
 
-    private stdClass $decoded;
-
-    protected function getPayload(): stdClass
-    {
-        if (!isset($this->decoded)) {
-            $this->decoded = json_decode($this->payload);
-        }
-
-        return $this->decoded;
-    }
-
     public function getUserHandle(): ?string
     {
-        return $this->getPayload()->userId;
+        return $this->payload['userId'];
     }
 
     public function getPublicKey(): string
     {
-        return $this->getPayload()->credentialPublicKey;
+        return $this->payload['credentialPublicKey'];
     }
 
     public function getCertificateIssuer(): string
     {
-        return $this->getPayload()->certificateIssuer;
+        return $this->payload['certificateIssuer'];
     }
 }

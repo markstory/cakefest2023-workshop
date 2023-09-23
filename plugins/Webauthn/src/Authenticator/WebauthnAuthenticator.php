@@ -112,7 +112,7 @@ class WebauthnAuthenticator extends AbstractAuthenticator
             $challenge,
             $this->getConfig('requireUserVerification') === 'required',
             true,
-            false, // TODO debug why this isn't working with true
+            false,
         );
 
         return new CreateData($createData);

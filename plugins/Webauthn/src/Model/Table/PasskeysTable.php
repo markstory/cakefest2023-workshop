@@ -5,6 +5,7 @@ namespace App\Webauthn\Model\Table;
 
 use App\Webauthn\Model\CreateData;
 use App\Webauthn\Model\Entity\Passkey;
+use Cake\Database\Type\JsonType;
 use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -47,6 +48,8 @@ class PasskeysTable extends Table
             'foreignKey' => 'user_id',
             'joinType' => 'INNER',
         ]);
+
+        $this->getSchema()->setColumnType('payload', JsonType::class);
     }
 
     /**
@@ -97,7 +100,7 @@ class PasskeysTable extends Table
         $key = $this->newEmptyEntity();
         $key->credential_id = $data->getCredentialId();
         $key->display_name = $displayName;
-        $key->payload = json_encode($data->getPayload());
+        $key->payload = $data->getPayload();
 
         return $key;
     }
