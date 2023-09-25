@@ -49,7 +49,7 @@ class PasskeysTable extends Table
             'joinType' => 'INNER',
         ]);
 
-        $this->getSchema()->setColumnType('payload', JsonType::class);
+        $this->getSchema()->setColumnType('payload', 'json');
     }
 
     /**
