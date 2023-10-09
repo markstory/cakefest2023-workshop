@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d98b9865d4ac384e7b9b9c369ce3df42",
+    "content-hash": "7534188bff138304e30d7ae7f3970022",
     "packages": [
         {
             "name": "cakephp/authentication",
@@ -834,34 +834,34 @@
         },
         {
             "name": "mobiledetect/mobiledetectlib",
-            "version": "3.74.0",
+            "version": "4.8.02",
             "source": {
                 "type": "git",
                 "url": "https://github.com/serbanghita/Mobile-Detect.git",
-                "reference": "812a4aa4605c63fc33d7fe32ca82f29275940b9d"
+                "reference": "6a5384dbc89b6596659b9a46b8885cd6452ef2a0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/serbanghita/Mobile-Detect/zipball/812a4aa4605c63fc33d7fe32ca82f29275940b9d",
-                "reference": "812a4aa4605c63fc33d7fe32ca82f29275940b9d",
+                "url": "https://api.github.com/repos/serbanghita/Mobile-Detect/zipball/6a5384dbc89b6596659b9a46b8885cd6452ef2a0",
+                "reference": "6a5384dbc89b6596659b9a46b8885cd6452ef2a0",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.4"
+                "php": ">=8.0",
+                "psr/simple-cache": "^3.0"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "v2.19.3",
-                "phpunit/phpunit": "^7.0.0",
-                "squizlabs/php_codesniffer": "3.*"
+                "friendsofphp/php-cs-fixer": "^3.14",
+                "phpbench/phpbench": "^1.2",
+                "phpstan/phpstan": "^1.10",
+                "phpunit/phpunit": "^9.6",
+                "squizlabs/php_codesniffer": "^3.7"
             },
             "type": "library",
             "autoload": {
                 "psr-4": {
                     "Detection\\": "src/"
-                },
-                "classmap": [
-                    "src/MobileDetect.php"
-                ]
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -886,9 +886,15 @@
             ],
             "support": {
                 "issues": "https://github.com/serbanghita/Mobile-Detect/issues",
-                "source": "https://github.com/serbanghita/Mobile-Detect/tree/3.74.0"
+                "source": "https://github.com/serbanghita/Mobile-Detect/tree/4.8.02"
             },
-            "time": "2022-12-04T15:37:32+00:00"
+            "funding": [
+                {
+                    "url": "https://github.com/serbanghita",
+                    "type": "github"
+                }
+            ],
+            "time": "2023-10-06T18:25:20+00:00"
         },
         {
             "name": "nikic/php-parser",
@@ -6110,6 +6116,7 @@
         "cakephp/authorization": 20,
         "cakephp/cakephp": 20,
         "cakephp/migrations": 20,
+        "cakephp/repl": 20,
         "cakephp/bake": 20,
         "cakephp/debug_kit": 20
     },
