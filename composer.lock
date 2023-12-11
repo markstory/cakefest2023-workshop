@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d98b9865d4ac384e7b9b9c369ce3df42",
+    "content-hash": "7ed372824c85fe1580c8ad20dce695f5",
     "packages": [
         {
             "name": "cakephp/authentication",
@@ -707,20 +707,20 @@
         },
         {
             "name": "lbuchs/webauthn",
-            "version": "v1.1.3",
+            "version": "v2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lbuchs/WebAuthn.git",
-                "reference": "4780c7b017ccc74a023c6ae05b5847e478f5b97d"
+                "reference": "1cc44fbd61d41aec55d0f21f386a1fdd7df1459a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lbuchs/WebAuthn/zipball/4780c7b017ccc74a023c6ae05b5847e478f5b97d",
-                "reference": "4780c7b017ccc74a023c6ae05b5847e478f5b97d",
+                "url": "https://api.github.com/repos/lbuchs/WebAuthn/zipball/1cc44fbd61d41aec55d0f21f386a1fdd7df1459a",
+                "reference": "1cc44fbd61d41aec55d0f21f386a1fdd7df1459a",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.1"
+                "php": ">=8.0.0"
             },
             "type": "library",
             "autoload": {
@@ -746,9 +746,9 @@
             ],
             "support": {
                 "issues": "https://github.com/lbuchs/WebAuthn/issues",
-                "source": "https://github.com/lbuchs/WebAuthn/tree/v1.1.3"
+                "source": "https://github.com/lbuchs/WebAuthn/tree/v2.1.0"
             },
-            "time": "2022-11-21T08:46:34+00:00"
+            "time": "2023-10-23T10:19:40+00:00"
         },
         {
             "name": "league/container",
@@ -6110,6 +6110,7 @@
         "cakephp/authorization": 20,
         "cakephp/cakephp": 20,
         "cakephp/migrations": 20,
+        "cakephp/repl": 20,
         "cakephp/bake": 20,
         "cakephp/debug_kit": 20
     },
@@ -6119,5 +6120,5 @@
         "php": ">=8.1"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }
